@@ -1,42 +1,66 @@
 var express = require('express');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var favicon = require('serve-favicon');
+var cookieParser = require('cookie-parser');
+var methodOverride = require('method-override');
+var mongoose = require('mongoose');
 var logger = require('morgan');
-var path = require('path');
 var http = require('http');
+var path = require('path');
 
+
+/**
+ * Create express app
+ */
 var app = express();
 
-// view engine setup
+
+/**
+ * Setup port
+ */
 app.set('port', process.env.PORT || 3000);
 
+
+/**
+ * Config server
+ */
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(methodOverride());
 
 
-// ######## Routes ########
-//GET: Homepage
-app.get('/', function (request, response) {
-    //response.send('GET: Homepage');
-    response.sendFile(__dirname + '/views/' + 'index.html');
+/**
+ * MongoDB connection
+ */
+mongoose.connect('mongodb://localhost/todoApp');
+
+
+/**
+ * Routing
+ */
+// API
+require('./routes/api/categories')(app);
+
+// UI
+app.all('/*', function (request, response) {
+    response.status(200);
+    response.set({ 'content-type': 'text/html; charset=utf-8' });
+    response.sendfile('public/index.html' );
 });
-// ########################
 
 
+/**
+ * Error handling
+ */
 // catch 404 and forward to error handler
 app.use(function (request, response, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
-// error handlers
 
 // development error handler
 // will print stacktrace
@@ -60,8 +84,19 @@ app.use(function (error, request, response, next) {
     });
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
+// print error in console
+app.on('error', function (error){
+    console.log('Error: \n' + error.message);
+    console.log(error.stack);
+});
+
+
+/**
+ * Create server
+ */
+
+http.createServer(app).listen(app.get('port'), function () {
+    console.log('Application is running on http://localhost:' + app.get('port'));
 });
 
 module.exports = app;
