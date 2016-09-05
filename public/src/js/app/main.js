@@ -1,29 +1,21 @@
-var NShop = angular.module('NShop', ['ngRoute']);
+var NShop = angular.module('NShop', ['ui.router']);
 
-NShop.config(function($routeProvider, $locationProvider) {
-    $locationProvider.html5Mode({
-        enabled: true,      // set HTML5 mode
-        requireBase: false
-    });
+NShop.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.when('', '/admin');
 
-    $routeProvider
-        .when('/test', {
-            controller: 'DashboardController',
-            templateUrl: 'views/test.html'
+    $stateProvider
+        .state('admin', {
+            url: '/admin',
+            templateUrl: 'src/js/app/admin/admin.html'
         })
-        .when('/', {
-            controller: 'MyTestCtrl',
-            templateUrl: 'views/main.html'
+        .state('admin.categories', {
+            url: '/categories',
+            templateUrl: 'src/js/app/admin/categories/categories.html',
+            controller: 'AdminCategories'
         })
-        .otherwise('/');
-});
-
-NShop.controller('MyTestCtrl', function ($scope) {
-    self = $scope;
-    self.val = 'TeSt';
-    self.counter = 0;
-    var self = self;
-    self.clicked = function() {
-        self.counter++;
-    };
+        .state('admin.users', {
+            url: '/users',
+            templateUrl: 'src/js/app/admin/users/users.html',
+            controller: 'AdminUsers'
+        });
 });

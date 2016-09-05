@@ -1,17 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="NShop" lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
+    <link rel="stylesheet" href="src/css/styles.css"/>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
 
     <script src="src/js/app/main.js"></script>
-    <script src="src/js/app/dashboard/DasboardController.js"></script>
-    <title>123</title>
+
+    <!-- Admin panel -->
+    <script src="src/js/app/admin/categories/categories.js"></script>
+    <script src="src/js/app/admin/users/users.js"></script>
+
+    <!-- Dashboard -->
+    <!--<script src="src/js/app/dashboard/home/home.js"></script>-->
+
+    <title>NShop</title>
 </head>
-<body ng-app="NShop">
-    <div ng-view></div>
+<body>
+    <header>
+        <div>Header text</div>
+    </header>
+    <section id="content">
+        <div data-ui-view=""></div>
+    </section>
+    <footer>
+        Fooher
+    </footer>
 </body>
 </html>
