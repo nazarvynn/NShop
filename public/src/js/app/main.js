@@ -10,8 +10,13 @@ NShop.config(function($stateProvider, $urlRouterProvider) {
         })
         .state('admin.categories', {
             url: '/categories',
-            templateUrl: 'src/js/app/admin/categories/categories.html',
-            controller: 'AdminCategories'
+            templateUrl: 'src/js/app/admin/categories/list.html',
+            controller: 'AdminCategoriesList'
+        })
+        .state('admin.categories.detail', {
+            url: '/:categoryId',
+            templateUrl: 'src/js/app/admin/categories/detail.html',
+            controller: 'AdminCategoriesDetail'
         })
         .state('admin.users', {
             url: '/users',

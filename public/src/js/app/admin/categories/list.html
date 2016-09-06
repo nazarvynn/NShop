@@ -1,0 +1,10 @@
+<h2>Categories</h2>
+<ul ng-repeat="(index, category) in categories">
+    <li>
+        <a ui-sref=".detail({categoryId: category.id})" href="">
+            <img src="/data/images/{{category.img}}" alt="{{category.name}}" />
+            <span>{{category.name}}</span>
+        </a>
+    </li>
+</ul>
+<div ui-view=""></div>
