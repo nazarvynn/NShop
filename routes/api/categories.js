@@ -49,7 +49,7 @@ module.exports = function (app) {
 
 
     app.get('/api/categories', function (request, response) {
-        //TODO: get this from DB and move to
+        //TODO: get this from DB
         var categories_ = _.map(categories, function (category) {
             return _.omit(category, 'products');
         });
@@ -61,7 +61,7 @@ module.exports = function (app) {
     app.get('/api/categories/:categoryId', function (request, response) {
         var categoryId = request.params.categoryId;
 
-        //TODO: get this from DB and move to
+        //TODO: get this from DB
         var category = _.find(categories, function (category) {
             return categoryId === category.id;
         });
@@ -73,16 +73,18 @@ module.exports = function (app) {
 
     app.get('/api/categories/:categoryId/products', function (request, response) {
         var categoryId = request.params.categoryId;
+
+        //TODO: get this from DB
         var category = _.find(categories, function (category) {
             return categoryId === category.id;
-        }) || {};
+        });
+
         var data = {
-            category: category,
-            products: JSON.parse(JSON.stringify(category.products || '')) || []
+            category: _.omit(category, 'products') || {},
+            products: category.products || []
         };
-        delete category.products;
 
         response.status(200);
-        response.send(JSON.stringify(data || {}));
+        response.send(JSON.stringify(data));
     });
 };
