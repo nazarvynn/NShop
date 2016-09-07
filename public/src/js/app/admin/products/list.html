@@ -1,0 +1,10 @@
+<h2>Products by category {{category.name}}</h2>
+<ul ng-repeat="(index, product) in products">
+    <li>
+        <a ui-sref=".detail({productId: product.id})" href="">
+            <img src="/data/images/{{product.img}}" alt="{{product.name}}" />
+            <span>{{product.name}}</span>
+        </a>
+    </li>
+</ul>
+<div ui-view=""></div>
