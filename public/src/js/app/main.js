@@ -6,7 +6,8 @@ NShop.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('admin', {
             url: '/admin',
-            templateUrl: 'src/js/app/admin/admin.html'
+            templateUrl: 'src/js/app/admin/admin.html',
+            controller: function ($rootScope) { $rootScope.bodyClass = 'admin'; }
         })
         .state('admin.categories', {
             url: '/categories',

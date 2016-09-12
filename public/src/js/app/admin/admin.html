@@ -1,12 +1,12 @@
-<header>
+<header class="header">
     <h1>Admin page</h1>
-    <nav>
+    <nav ng-controller="Navigation">
         <ul>
-            <li><a ui-sref=".categories" href="">Categories</a></li>
-            <li><a ui-sref=".users" href="">Users</a></li>
+            <li ng-class="{ active: isActive('categories')}"><a ui-sref=".categories" href="">Categories</a></li>
+            <li ng-class="{ active: isActive('users')}"><a ui-sref=".users" href="">Users</a></li>
         </ul>
     </nav>
 </header>
-<section id="content">
+<main class="content">
     <div ui-view=""></div>
-</section>
+</main>

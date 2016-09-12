@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html ng-app="NShop" lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 
     <link rel="stylesheet" href="src/css/styles.css"/>
+    <link rel="stylesheet" href="src/css/admin.css"/>
+    <!--<link rel="stylesheet" href="src/css/dashboard.css"/>-->
 
+    <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
 
     <script src="src/js/app/main.js"></script>
     <script src="src/js/app/utils/utils.js"></script>
+    <script src="src/js/app/common/navigation/navigation.js"></script>
 
     <!-- Services -->
     <script src="src/js/app/services/categories.js"></script>
@@ -28,10 +32,11 @@
 
     <title>NShop</title>
 </head>
-<body>
-<div data-ui-view=""></div>
-    <footer>
-        Fooher
-    </footer>
+<body class="{{bodyClass}}">
+<div class="wrapper">
+    <div data-ui-view=""></div>
+</div>
+<footer class="footer">
+</footer>
 </body>
 </html>

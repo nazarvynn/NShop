@@ -5,7 +5,6 @@ module.exports = function (app) {
     var categories = [{
         id: 'category-1',
         name: 'Category 1',
-        img: 'category-1.png',
         products: [{
             id: 'product-1',
             name: 'product 1',
@@ -22,7 +21,6 @@ module.exports = function (app) {
     }, {
         id: 'category-2',
         name: 'Category 2',
-        img: 'category-2.png',
         products: [{
             id: 'product-4',
             name: 'product 4',
@@ -35,7 +33,6 @@ module.exports = function (app) {
     }, {
         id: 'category-3',
         name: 'Category 3',
-        img: 'category-3.png',
         products: [{
             id: 'product-6',
             name: 'product 6',
