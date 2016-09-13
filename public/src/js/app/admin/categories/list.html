@@ -1,7 +1,30 @@
 <h2>Categories</h2>
-<ol>
-    <li ng-repeat="(index, category) in categories">
-        <a ui-sref="admin.products({categoryId: category.id})" href="">{{category.name}}</a>
-    </li>
-</ol>
+<p>
+    <button class="btn btn--add" ui-sref=".detail({categoryId: 'create'})">Add category</button>
+</p>
+<br />
+<table>
+    <colgroup>
+        <col style="min-width: 100px" />
+        <col style="min-width: 50px" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(index, category) in categories">
+            <td>
+                <a ui-sref="admin.products({categoryId: category.id})" href="">{{category.name}}</a>
+            </td>
+            <td>
+                <button class="btn btn--edit" ui-sref=".detail({categoryId: category.id})">Edit</button>
+                <button class="btn btn--delete" ng-click="remove(category.id)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <div ui-view=""></div>
+<br />
