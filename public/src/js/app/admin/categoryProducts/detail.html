@@ -1,0 +1,19 @@
+<form ng-controller="AdminCategoryProductsDetail">
+    <p>
+        <label>Name</label><br />
+        <input ng-model="product.name" type="text"/>
+    </p>
+    <p>
+        <label>Price</label><br />
+        <input ng-model="product.name" type="text"/>
+    </p>
+    <p>
+        <label>Description</label><br />
+        <textarea></textarea>
+    </p>
+    <p>
+        <button type="button" ng-click="onClear()">Clear</button>
+        <button type="button" ng-click="onReset()">Cancel</button>
+        <button type="submit" ng-click="onSubmit()">Save</button>
+    </p>
+</form>

@@ -1,0 +1,9 @@
+.admin .content {
+    position: relative;
+}
+
+.go-back {
+    position: absolute;
+    left: 20px;
+    top: 4px;
+}

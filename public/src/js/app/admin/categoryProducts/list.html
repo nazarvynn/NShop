@@ -1,0 +1,36 @@
+<h2>Product from category "{{categoryName}}"</h2>
+<a class="go-back" ui-sref="admin.categories" href="">go Back</a>
+<p>
+    <button ui-sref="admin.category-products.detail({productId: 'create'})">Add Product</button>
+</p>
+<br />
+<div ui-view=""></div>
+<br />
+<table>
+    <colgroup>
+        <col style="min-width: 200px" />
+        <col style="min-width: 200px" />
+        <col style="min-width: 100px" />
+        <col style="min-width: 116px" />
+    </colgroup>
+    <thead>
+    <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(index, product) in products">
+        <td><!--img src="/data/images/{{product.img}}" alt="{{product.name}}" /--></td>
+        <td>{{product.name}}</td>
+        <td>{{product.price}}</td>
+        <td>
+            <button ui-sref="admin.category-products.detail({productId: product._id})">Edit</button>
+            <button ng-click="removeProduct(product)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br />

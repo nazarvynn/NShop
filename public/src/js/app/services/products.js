@@ -2,13 +2,31 @@ NShop.factory('ProductsService', function ($http) {
     var service = {};
     var URL = {
         products: '/api/products',
-        productsByCategory: '/api/categories/{categoryId}/products'
+        product: '/api/products/{id}',
+        productsByCategory: '/api/categories/{categoryId}/products',
+        productByCategory: '/api/categories/{categoryId}/products/{productId}'
     };
 
     service.getProducts = function () {
-        return $http.get(URL.products).then(function (response) {
-            return response.data;
-        }, onError_);
+        return request('get', URL.products);
+    };
+
+    service.getProduct = function (id) {
+        return request('get', URL.product.format({id: id}));
+    };
+
+    service.createProduct = function (product) {
+        return request('post', URL.products, product);
+    };
+
+    //TODO: add "PATCH" method
+    service.updateProduct = function (product) {
+        var id  = product._id;
+        return request('put', URL.product.format({id: id}), product);
+    };
+
+    service.removeProduct = function(id) {
+        return request('delete', URL.product.format({id: id}));
     };
 
     service.getProductsByCategory = function (categoryId) {
@@ -19,26 +37,14 @@ NShop.factory('ProductsService', function ($http) {
         }, onError_);
     };
 
-    service.getProduct = function (id) {
-        return $http.get(URL.products + '/' + id).then(function (response) {
-            return response.data;
-        }, onError_);
-    };
-
-    service.createProduct = function (product) {
-        return {};
-    };
-
-    service.updateProduct = function (product) {
-        return {};
-    };
-
-    service.deleteProduct = function(id) {
-        return {};
-    };
-
     function onError_(response) {
         console.log('Error:', response);
+    }
+
+    function request(type, url, data) {
+        return $http[type](url, data).then(function (response) {
+            return response.data;
+        }, onError_);
     }
 
     return service;

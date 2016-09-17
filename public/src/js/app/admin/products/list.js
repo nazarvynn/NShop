@@ -1,10 +1,7 @@
-NShop.controller('AdminProductsList', function ($scope, $stateParams, ProductsService) {
+NShop.controller('AdminProductsList', function ($scope) {
 
     function init_() {
-        ProductsService.getProductsByCategory($stateParams.categoryId).then(function (data) {
-            $scope.categoryName = data.name;
-            $scope.products = data.products;
-        });
+        console.log('AdminProductsList');
     }
 
     init_();

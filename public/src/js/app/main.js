@@ -18,30 +18,37 @@ NShop.config(function($stateProvider, $urlRouterProvider) {
         .state('admin.categories.detail', {
             url: '/:categoryId',
             templateUrl: 'src/js/app/admin/categories/detail.html'
-            //controller: 'AdminCategoriesDetail'
         })
+        // Admin Category Products
         .state('admin.category-products', {
             url: '/categories/:categoryId/products',
+            templateUrl: 'src/js/app/admin/categoryProducts/list.html',
+            controller: 'AdminCategoryProductsList'
+        })
+        .state('admin.category-products.detail', {
+            url: '/:productId',
+            templateUrl: 'src/js/app/admin/categoryProducts/detail.html'
+        })
+        // Admin Products
+        .state('admin.products', {
+            url: '/products',
             templateUrl: 'src/js/app/admin/products/list.html',
             controller: 'AdminProductsList'
         })
-        // Admin Products
-        //.state('admin.products', {
-        //    url: '/categories/:categoryId/products',
-        //    templateUrl: 'src/js/app/admin/products/list.html',
-        //    controller: 'AdminProductsList'
-        //})
         //.state('admin.products.detail', {
-        //    url: '/:categoryId',
-        //    templateUrl: 'src/js/app/admin/categories/detail.html',
-        //    controller: 'AdminCategoriesDetail'
+        //    url: '/:productId',
+        //    templateUrl: 'src/js/app/admin/products/detail.html'
         //})
-        // Admin Orders
-        //TODO:
         // Admin Users
         .state('admin.users', {
             url: '/users',
-            templateUrl: 'src/js/app/admin/users/users.html',
-            controller: 'AdminUsers'
+            templateUrl: 'src/js/app/admin/users/list.html',
+            controller: 'AdminUsersList'
+        })
+        // Admin Orders
+        .state('admin.orders', {
+            url: '/orders',
+            templateUrl: 'src/js/app/admin/orders/list.html',
+            controller: 'AdminOrdersList'
         });
 });
