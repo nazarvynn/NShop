@@ -4,20 +4,20 @@ NShop
 #Install:
 
 ##Express
-* `$ npm install express --save`
+`$ npm install express --save`
 
 ##Update modules
-* `$ npm update`
+`$ npm update`
 
 ##MongoDB
 Go to MongoDB console
-* `$ mongo`
-* `> db.createCollection("categories")`
-* `> db.createCollection("users")`
+`$ mongo`
+`> db.createCollection("categories")`
+`> db.createCollection("users")`
 
 #Run
-* `$ cd NShop`
-* `$ node app`
+`$ cd NShop`
+`$ node app`
 
 #Info
 List of npm modules
