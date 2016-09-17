@@ -1,21 +1,26 @@
 NShop.controller('AdminCategoriesList', function ($scope, CategoriesService) {
 
-    $scope.remove = function (categoryId) {
-        console.log('delete 1', categoryId);
-        //var txt;
-        //var r = confirm("Press a button!");
-        //if (r == true) {
-        //    txt = "You pressed OK!";
-        //} else {
-        //    txt = "You pressed Cancel!";
-        //}
+    $scope.removeCategory = function (category) {
+        var isOk = confirm('Are you really want to remove "' + category.name + '" category?');
+        if (isOk) removeCategory(category._id);
     };
+
+    $scope.$on('AdminCategoriesList.load', loadList);
 
     function init_() {
         $scope.activeItem = 'categories';
+        loadList();
+    }
 
+    function loadList() {
         CategoriesService.getCategories().then(function (data) {
             $scope.categories = data;
+        });
+    }
+
+    function removeCategory(categoryId) {
+        CategoriesService.removeCategory(categoryId).then(function (data) {
+            if (data.ok) loadList();
         });
     }
 

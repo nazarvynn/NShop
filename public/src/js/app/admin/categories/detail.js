@@ -1,29 +1,54 @@
 NShop.controller('AdminCategoriesDetail', function ($scope, $stateParams, CategoriesService) {
-
-    var actions_ = {
-        'create': function () {
-            console.log('create 1');
-        },
-        'edit': function (categoryId) {
-            console.log('edit 1');
-            CategoriesService.getCategory(categoryId).then(function (data) {
-                $scope.category = data;
-            });
-        }
+    var originalData = {};
+    var emptyCategory = {
+        name: ''
     };
 
-    $scope.remove = function (categoryId) {
-        applyAction('remove', categoryId);
+    $scope.onSubmit = function () {
+        var categoryId = $scope.category._id;
+        (categoryId && 'create' !== categoryId) ? updateCategory() : createCategory();
     };
 
-    function applyAction(type, categoryId) {
-        actions_[type](categoryId);
-    }
+    $scope.onReset = function () {
+        $scope.category = ObjUtils.clone(originalData);
+    };
+
+    $scope.onClear = clearCategory;
 
     function init_() {
         var categoryId = $stateParams.categoryId;
-        var action  = 'create' === categoryId ? 'create' : 'edit';
-        applyAction(action, categoryId);
+        if ('create' !== categoryId) getCategory(categoryId);
+    }
+
+    function showCategory(data) {
+        originalData = ObjUtils.clone(data);
+        $scope.category = data;
+    }
+
+    function getCategory(categoryId) {
+        CategoriesService.getCategory(categoryId).then(showCategory);
+    }
+
+    function createCategory() {
+        CategoriesService.createCategory($scope.category).then(function (response) {
+            if (response._id) {
+                clearCategory();
+                $scope.$emit('AdminCategoriesList.load');
+            }
+        });
+    }
+
+    function updateCategory() {
+        CategoriesService.updateCategory($scope.category).then(function (response) {
+            if (response._id) {
+                showCategory(response);
+                $scope.$emit('AdminCategoriesList.load');
+            }
+        });
+    }
+
+    function clearCategory() {
+        $scope.category = ObjUtils.clone(emptyCategory);
     }
 
     init_();

@@ -35,14 +35,14 @@ app.use(methodOverride());
 /**
  * MongoDB connection
  */
-mongoose.connect('mongodb://localhost/todoApp');
+mongoose.connect('mongodb://127.0.0.1/NShop');
 
 
 /**
  * Routing
  */
 // API
-require('./routes/api/categories')(app);
+require('./routes/api/categories')(app, mongoose);
 
 // UI
 app.all('/*', function (request, response) {

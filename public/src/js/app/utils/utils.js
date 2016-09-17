@@ -17,4 +17,9 @@ NShop.run(function ($rootScope, $location) {
             return str;
         }
     }
+
+    window.ObjUtils = function() {};
+    ObjUtils.clone = function (obj) {
+        return JSON.parse(JSON.stringify(obj));
+    };
 });

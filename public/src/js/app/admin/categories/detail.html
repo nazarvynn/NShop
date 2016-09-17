@@ -1,3 +1,10 @@
-<h2>Category detail</h2>
-<p>Name: {{category.name}}</p>
-<p ng-if="category.id">Id: {{category.id}}</p>
+<form ng-controller="AdminCategoriesDetail">
+    <p>
+        <input ng-model="category.name" type="text" name="name" placeholder="Category name" />
+        <span>
+            <button type="button" ng-click="onClear()">Clear</button>
+            <button type="button" ng-click="onReset()">Cancel</button>
+            <button type="submit" ng-click="onSubmit()">Save</button>
+        </span>
+    </p>
+</form>

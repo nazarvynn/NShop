@@ -2,7 +2,7 @@ NShop.controller('AdminProductsList', function ($scope, $stateParams, ProductsSe
 
     function init_() {
         ProductsService.getProductsByCategory($stateParams.categoryId).then(function (data) {
-            $scope.category = data.category;
+            $scope.categoryName = data.name;
             $scope.products = data.products;
         });
     }
