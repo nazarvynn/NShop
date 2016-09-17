@@ -11,12 +11,12 @@ NShop
 
 ##MongoDB
 Go to MongoDB console
-`$ mongo`
-`> db.createCollection("categories")`
+`$ mongo` <br />
+`> db.createCollection("categories")` <br />
 `> db.createCollection("users")`
 
 #Run
-`$ cd NShop`
+`$ cd NShop`<br />
 `$ node app`
 
 #Info
