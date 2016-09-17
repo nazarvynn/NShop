@@ -1,58 +1,59 @@
-NShop.controller('AdminCategoryProductsDetail', function ($scope, $stateParams) {
+NShop.controller('AdminCategoryProductsDetail', function ($scope, $stateParams, CategoryProductsService) {
+    var originalData = {};
+    var emptyProduct = {
+        name: '',
+        price: '',
+        description: '',
+        ing: ''
+    };
+    var categoryId = $stateParams.categoryId;
+    var productId = $stateParams.productId;
 
-    console.log('AdminCategoryProductsDetail');
+    $scope.onSubmit = function () {
+        var productId = $scope.product._id;
+        (productId && 'create' !== productId) ? updateCategoryProduct() : createCategoryProduct();
+    };
 
-    //var originalData = {};
-    //var emptyCategory = {
-    //    name: ''
-    //};
-    //
-    //$scope.onSubmit = function () {
-    //    var categoryId = $scope.category._id;
-    //    (categoryId && 'create' !== categoryId) ? updateCategory() : createCategory();
-    //};
-    //
-    //$scope.onReset = function () {
-    //    $scope.category = ObjUtils.clone(originalData);
-    //};
-    //
-    //$scope.onClear = clearCategory;
-    //
-    //function init_() {
-    //    var categoryId = $stateParams.categoryId;
-    //    if ('create' !== categoryId) getCategory(categoryId);
-    //}
-    //
-    //function showCategory(data) {
-    //    originalData = ObjUtils.clone(data);
-    //    $scope.category = data;
-    //}
-    //
-    //function getCategory(categoryId) {
-    //    CategoriesService.getCategory(categoryId).then(showCategory);
-    //}
-    //
-    //function createCategory() {
-    //    CategoriesService.createCategory($scope.category).then(function (response) {
-    //        if (response._id) {
-    //            clearCategory();
-    //            $scope.$emit('AdminCategoriesList.load');
-    //        }
-    //    });
-    //}
-    //
-    //function updateCategory() {
-    //    CategoriesService.updateCategory($scope.category).then(function (response) {
-    //        if (response._id) {
-    //            showCategory(response);
-    //            $scope.$emit('AdminCategoriesList.load');
-    //        }
-    //    });
-    //}
-    //
-    //function clearCategory() {
-    //    $scope.category = ObjUtils.clone(emptyCategory);
-    //}
-    //
-    //init_();
+    $scope.onReset = function () {
+        $scope.product = ObjUtils.clone(originalData);
+    };
+
+    $scope.onClear = clearCategoryProduct;
+
+    function init_() {
+        if ('create' !== productId) getCategoryProduct();
+    }
+
+    function showCategoryProduct(data) {
+        originalData = ObjUtils.clone(data);
+        $scope.product = data;
+    }
+
+    function getCategoryProduct() {
+        CategoryProductsService.getCategoryProduct(categoryId, productId).then(showCategoryProduct);
+    }
+
+    function createCategoryProduct() {
+        CategoryProductsService.createCategoryProduct(categoryId, $scope.product).then(function (response) {
+            if (response._id) {
+                clearCategoryProduct();
+                $scope.$emit('AdminCategoryProductsList.load');
+            }
+        });
+    }
+
+    function updateCategoryProduct() {
+        CategoryProductsService.updateCategoryProduct(categoryId, $scope.product).then(function (response) {
+            if (response._id) {
+                showCategoryProduct(response);
+                $scope.$emit('AdminCategoryProductsList.load');
+            }
+        });
+    }
+
+    function clearCategoryProduct() {
+        $scope.product = ObjUtils.clone(emptyProduct);
+    }
+
+    init_();
 });

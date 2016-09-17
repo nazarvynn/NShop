@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var logger = require('morgan');
 var http = require('http');
 var path = require('path');
@@ -37,12 +38,25 @@ app.use(methodOverride());
  */
 mongoose.connect('mongodb://127.0.0.1/NShop');
 
+//Database schemas & models
+var productSchema = Schema({
+    name : String,
+    price: Number,
+    description: String,
+    img: String
+});
+
+var Category = mongoose.model('categories', {
+    name : String,
+    products: [productSchema]
+});
 
 /**
  * Routing
  */
 // API
-require('./routes/api/categories')(app, mongoose);
+require('./routes/api/categories')(app, Category);
+require('./routes/api/categoryProducts')(app, Category);
 
 // UI
 app.all('/*', function (request, response) {

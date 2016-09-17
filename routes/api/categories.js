@@ -1,17 +1,15 @@
 var _ = require('underscore');
 
-module.exports = function (app, mongoose) {
+module.exports = function (app, Category) {
 
-    //Database model
-    var Categories = mongoose.model('categories', {
-        name : String,
-        products: Array
-    });
-
+    var URL = {
+        categories: '/api/categories',
+        category: '/api/categories/:id'
+    };
 
     //Routes
-    app.get('/api/categories', function (request, response) {
-        Categories.find(function (error, categories) {
+    app.get(URL.categories, function (request, response) {
+        Category.find(function (error, categories) {
             response.status(200);
             if (error) response.send(error);
 
@@ -23,50 +21,41 @@ module.exports = function (app, mongoose) {
     });
 
 
-    app.get('/api/categories/:id', function (request, response) {
-        Categories.findById(request.params.id, send(response));
+    app.get(URL.category, function (request, response) {
+        Category.findById(request.params.id, send(response));
     });
 
 
-    //TODO:
-    app.get('/api/categories/:id/products', function (request, response) {
-        Categories.findById(request.params.id, send(response, true));
-    });
-
-
-    app.post('/api/categories', function (request, response) {
-        var data = {
+    app.post(URL.categories, function (request, response) {
+        var category = {
             name: request.body.name
         };
-        Categories.create(data, send(response));
+        Category.create(category, send(response));
     });
 
 
-    app.put('/api/categories/:id', function (request, response) {
-        var data = {
+    app.put(URL.category, function (request, response) {
+        var category = {
             name: request.body.name
         };
-        Categories.findOneAndUpdate({ _id: request.params.id }, data, { new: true }, send(response));
+        Category.findOneAndUpdate({ _id: request.params.id }, category, { new: true }, send(response));
     });
 
 
-    app.delete('/api/categories/:id', function (request, response) {
-        Categories.remove({_id : request.params.id}, function (error, category) {
+    app.delete(URL.category, function (request, response) {
+        Category.remove({ _id : request.params.id }, function (error, category) {
             response.status(200);
             error ? response.send(error) : response.json(category);
         });
     });
 
 
-    function send(response, includeProducts) {
+    function send(response) {
         return function (error, category) {
             response.status(200);
             if (error) response.send(error);
 
-            var uselessFields = ['__v'];
-            if (!includeProducts) uselessFields.push('products');
-
-            var result = _.omit(category.toObject(), uselessFields);
+            var result = _.omit(category.toObject(), ['__v', 'products']);
             response.json(result);
         }
     }
