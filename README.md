@@ -10,7 +10,7 @@ NShop
 `$ npm update`
 
 ##MongoDB
-Go to MongoDB console
+Go to MongoDB console <br />
 `$ mongo` <br />
 `> db.createCollection("categories")` <br />
 `> db.createCollection("users")`
@@ -20,5 +20,5 @@ Go to MongoDB console
 `$ node app`
 
 #Info
-List of npm modules
+List of npm modules <br />
 `$ npm ls`
