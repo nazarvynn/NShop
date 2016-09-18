@@ -50,8 +50,8 @@ module.exports = function (app, Category, Product) {
             sendError(response, error);
 
             var product = category.products.id(productId);
-            _.each(newProduct, function (value, key) {
-                product[key] = value;
+            _.each(newProduct.toObject(), function (value, key) {
+                if ('_id' !== key) product[key] = value;
             });
 
             category.save(function (error, category) {
