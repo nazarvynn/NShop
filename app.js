@@ -46,17 +46,21 @@ var productSchema = Schema({
     img: String
 });
 
-var Category = mongoose.model('categories', {
+var categorySchema = Schema({
     name : String,
     products: [productSchema]
 });
+
+var Product = mongoose.model('products', productSchema);
+var Category = mongoose.model('categories', categorySchema);
 
 /**
  * Routing
  */
 // API
 require('./routes/api/categories')(app, Category);
-require('./routes/api/categoryProducts')(app, Category);
+require('./routes/api/categoryProducts')(app, Category, Product);
+require('./routes/api/products')(app, Category);
 
 // UI
 app.all('/*', function (request, response) {

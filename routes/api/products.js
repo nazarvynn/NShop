@@ -1,53 +1,33 @@
-module.exports = function (app) {
+var _ = require('underscore');
 
-    var products = [{
-        id: 'product-1',
-        name: 'product 1',
-        img: 'product-1.png'
-    }, {
-        id: 'product-2',
-        name: 'product 2',
-        img: 'product-2.png'
-    }, {
-        id: 'product-3',
-        name: 'product 3',
-        img: 'product-3.png'
-    }, {
-        id: 'product-4',
-        name: 'product 4',
-        img: 'product-4.png'
-    }, {
-        id: 'product-5',
-        name: 'product 5',
-        img: 'product-5.png'
-    }, {
-        id: 'product-6',
-        name: 'product 6',
-        img: 'product-6.png'
-    }, {
-        id: 'product-7',
-        name: 'product 7',
-        img: 'product-7.png'
-    }];
+module.exports = function (app, Category) {
 
-    app.get('/api/products', function (request, response) {
-        //TODO: get this from DB and move to
-        response.status(200);
-        response.send(JSON.stringify(products));
-    });
+    var URL = {
+        products: '/api/products',
+        product: '/api/product/:id'
+    };
 
-    app.get('/api/products/:productId', function (request, response) {
-        var productId = request.params.productId;
+    app.get(URL.products, function (request, response) {
+        Category.find(function (error, categories) {
+            response.status(200);
+            if (error) response.send(error);
 
-        //TODO: get this from DB and move to
-        var product = {};
-        for (var i = 0, length = products.length; i < length; i++) {
-            if (productId === products[i].id) {
-                product = products[i];
-            }
-        }
+            var result = _.chain(categories)
+                .map(function (category) {
+                    var categoryObj = category.toObject();
+                    if (!categoryObj.products.length) return [];
 
-        response.status(200);
-        response.send(JSON.stringify(product));
+                    return categoryObj.products = _.map(categoryObj.products, function (product) {
+                        return {
+                            categoryId: category._id,
+                            data: product
+                        };
+                    })
+                })
+                .flatten()
+                .value();
+
+            response.json(result);
+        });
     });
 };

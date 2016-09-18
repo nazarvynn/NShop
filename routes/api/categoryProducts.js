@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 
-module.exports = function (app, Category) {
+module.exports = function (app, Category, Product) {
 
     var URL = {
         categoryProducts: '/api/categories/:categoryId/products',
@@ -27,12 +27,12 @@ module.exports = function (app, Category) {
 
 
     app.post(URL.categoryProducts, function (request, response) {
-        var product = request.body;
+        var newProduct = Product(request.body);
 
         Category.findById(request.params.categoryId, function (error, category) {
             sendError(response, error);
 
-            category.products.push(product);
+            category.products.push(newProduct);
             category.save(function (error, category) {
                 if (error) response.send(error);
                 response.json(category);
@@ -43,7 +43,7 @@ module.exports = function (app, Category) {
 
     //TODO: "PATCH"
     app.put(URL.categoryProduct, function (request, response) {
-        var newProduct = request.body;
+        var newProduct = Product(request.body);
         var productId = request.params.productId;
 
         Category.findById(request.params.categoryId, function (error, category) {

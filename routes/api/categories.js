@@ -14,7 +14,7 @@ module.exports = function (app, Category) {
             if (error) response.send(error);
 
             var result = _.map(categories, function (category) {
-                return _.omit(category.toObject(), 'products');
+                return _.omit(category.toObject(), ['__v', 'products']);
             });
             response.json(result);
         });
