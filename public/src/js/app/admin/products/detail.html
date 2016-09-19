@@ -1,5 +1,9 @@
 <form ng-controller="AdminProductsDetail">
     <p>
+        <label>Category</label><br />
+        <select ng-disabled="productId !== 'create'" ng-model="selectedCategory" ng-options="category._id as category.name for category in categories"></select>
+    </p>
+    <p>
         <label>Name</label><br />
         <input ng-model="product.name" type="text"/>
     </p>

@@ -1,4 +1,4 @@
-NShop.controller('AdminProductsDetail', function ($scope, $stateParams, CategoryProductsService) {
+NShop.controller('AdminProductsDetail', function ($scope, $q, $stateParams, CategoryProductsService, CategoriesService) {
     var originalData = {};
     var emptyProduct = {
         name: '',
@@ -6,12 +6,12 @@ NShop.controller('AdminProductsDetail', function ($scope, $stateParams, Category
         description: '',
         ing: ''
     };
-    var productId = $stateParams.productId;
-    var categoryId = $scope.getCategoryId(productId);
+    $scope.productId = $stateParams.productId;
+    $scope.selectedCategory = $scope.getCategoryId($scope.productId);
 
     $scope.onSubmit = function () {
-        var productId = $scope.product._id;
-        (productId && 'create' !== productId) ? updateCategoryProduct() : createCategoryProduct();
+        $scope.productId = $scope.product._id;
+        ($scope.productId && 'create' !== $scope.productId) ? updateCategoryProduct() : createCategoryProduct();
     };
 
     $scope.onReset = function () {
@@ -21,25 +21,39 @@ NShop.controller('AdminProductsDetail', function ($scope, $stateParams, Category
     $scope.onClear = clearCategoryProduct;
 
     function init_() {
-        if ('create' !== productId) getCategoryProduct();
+        if ('create' !== $scope.productId) {
+            getCategoryProduct();
+        } else {
+            CategoriesService.getCategories().then(function (categories) {
+                $scope.categories = categories;
+            });
+        }
     }
 
-    function showCategoryProduct(data) {
-        originalData = ObjUtils.clone(data);
-        $scope.product = data;
+    function showCategoryProduct(product, categories) {
+        originalData = ObjUtils.clone(product);
+        $scope.product = product;
+        $scope.categories = categories;
     }
 
     function getCategoryProduct() {
-        console.log('productId', productId);
-        console.log('categoryId', categoryId);
+        console.log('productId', $scope.productId);
+        console.log('categoryId', $scope.selectedCategory);
 
-        if (categoryId && productId) {
-            CategoryProductsService.getCategoryProduct(categoryId, productId).then(showCategoryProduct);
+        if ($scope.selectedCategory && $scope.productId) {
+            var categoryProductP = CategoryProductsService.getCategoryProduct($scope.selectedCategory, $scope.productId);
+            var categoriesP = CategoriesService.getCategories();
+
+            $q.all([categoryProductP, categoriesP]).then(function (responses) {
+                var product = responses[0];
+                var categories = responses[1];
+                showCategoryProduct(product, categories);
+            });
         }
     }
 
     function createCategoryProduct() {
-        CategoryProductsService.createCategoryProduct(categoryId, $scope.product).then(function (response) {
+        CategoryProductsService.createCategoryProduct($scope.selectedCategory, $scope.product).then(function (response) {
             if (response._id) {
                 clearCategoryProduct();
                 $scope.$emit('AdminProductsList.load');
@@ -48,7 +62,7 @@ NShop.controller('AdminProductsDetail', function ($scope, $stateParams, Category
     }
 
     function updateCategoryProduct() {
-        CategoryProductsService.updateCategoryProduct(categoryId, $scope.product).then(function (response) {
+        CategoryProductsService.updateCategoryProduct($scope.selectedCategory, $scope.product).then(function (response) {
             if (response._id) {
                 showCategoryProduct(response);
                 $scope.$emit('AdminProductsList.load');
