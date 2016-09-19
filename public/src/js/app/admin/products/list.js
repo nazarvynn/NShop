@@ -23,6 +23,7 @@ NShop.controller('AdminProductsList', function ($scope, $stateParams, ProductsSe
     function loadList() {
         ProductsService.getProducts().then(function (data) {
             $scope.products = data;
+            $scope.$broadcast('AdminProductsList.loaded');
         });
     }
 
