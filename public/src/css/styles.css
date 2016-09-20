@@ -66,16 +66,21 @@ body {
 /* Header */
 .header {
     background-color: #333;
-    height: 78px;
+    border-bottom: 1px solid #111111;
+    display: flex;
+    height: 46px;
 }
 
 .header h1 {
+    align-self: center;
     color: #fff;
     font-size: 18px;
     text-align: center;
-    height: 30px;
-    line-height: 30px;
-    border-bottom: 1px solid #111111;
+    width: 150px;
+}
+
+.header nav {
+    flex: 1;
 }
 
 nav ul {
