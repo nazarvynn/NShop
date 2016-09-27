@@ -41,7 +41,6 @@ module.exports = function (app, Category, Product) {
     });
 
 
-    //TODO: "PATCH"
     app.put(URL.categoryProduct, function (request, response) {
         var newProduct = Product(request.body);
         var productId = request.params.productId;
@@ -61,6 +60,8 @@ module.exports = function (app, Category, Product) {
         });
     });
 
+    //TODO: Implement "PATCH"
+
 
     app.delete(URL.categoryProduct, function (request, response) {
         var productId = request.params.productId;
@@ -77,7 +78,7 @@ module.exports = function (app, Category, Product) {
     });
 
     function sendError(response, error) {
-        response.status(200);
-        if (error) response.send(error);
+        response.status(500);
+        response.send(error);
     }
 };

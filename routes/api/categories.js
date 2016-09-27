@@ -10,52 +10,72 @@ module.exports = function (app, Category) {
     //Routes
     app.get(URL.categories, function (request, response) {
         Category.find(function (error, categories) {
-            response.status(200);
-            if (error) response.send(error);
+            if (error) {
+                response.status(500);
+                response.send(error);
+            }
 
             var result = _.map(categories, function (category) {
                 return _.omit(category.toObject(), ['__v', 'products']);
             });
+            response.status(200);
             response.json(result);
         });
     });
 
 
     app.get(URL.category, function (request, response) {
-        Category.findById(request.params.id, send(response));
+        Category.findById(request.params.id, send(200, response));
     });
 
 
     app.post(URL.categories, function (request, response) {
-        var category = {
-            name: request.body.name
-        };
-        Category.create(category, send(response));
+        var body = request.body;
+
+        if (_.isEmpty(body)) {
+            response.status(204);
+            response.send({ error: 'No Content' });
+        } else {
+            var category = { name: body.name };
+            Category.create(category, send(201, response));
+        }
     });
 
 
     app.put(URL.category, function (request, response) {
-        var category = {
-            name: request.body.name
-        };
-        Category.findOneAndUpdate({ _id: request.params.id }, category, { new: true }, send(response));
+        var body = request.body;
+
+        if (_.isEmpty(body)) {
+            response.status(204);
+            response.send({ error: 'No Content' });
+        } else {
+            var category = { name: body.name };
+            Category.findOneAndUpdate({ _id: request.params.id }, category, { new: true }, send(200, response));
+        }
     });
 
 
     app.delete(URL.category, function (request, response) {
-        Category.remove({ _id : request.params.id }, function (error, category) {
-            response.status(200);
-            error ? response.send(error) : response.json(category);
-        });
+        Category.remove({ _id : request.params.id }, send(200, response));
     });
 
 
-    function send(response) {
+    function send(statusCode, response) {
         return function (error, category) {
-            response.status(200);
-            if (error) response.send(error);
+            var _statusCode = statusCode || 200;
+
+            if (error) {
+                response.status(500);
+                response.send(error);
+            }
+
+            if (!category) {
+                response.status(404);
+                response.send({ error: 'ID not found or invalid' });
+            }
 
             var result = _.omit(category.toObject(), ['__v', 'products']);
+            response.status(_statusCode);
             response.json(result);
         }
     }

@@ -9,8 +9,11 @@ module.exports = function (app, Category) {
 
     app.get(URL.products, function (request, response) {
         Category.find(function (error, categories) {
-            response.status(200);
-            if (error) response.send(error);
+
+            if (error) {
+                response.status(500);
+                response.send(error);
+            }
 
             var result = _.chain(categories)
                 .map(function (category) {
@@ -27,6 +30,7 @@ module.exports = function (app, Category) {
                 .flatten()
                 .value();
 
+            response.status(200);
             response.json(result);
         });
     });
