@@ -13,15 +13,17 @@ NShop.controller('AdminCategoriesList', function ($scope, CategoriesService) {
     }
 
     function loadList() {
-        CategoriesService.getCategories().then(function (data) {
-            $scope.categories = data;
-        });
+        CategoriesService.getCategories()
+            .then(function (data) {
+                $scope.categories = data;
+            });
     }
 
     function removeCategory(categoryId) {
-        CategoriesService.removeCategory(categoryId).then(function (data) {
-            if (data.ok) loadList();
-        });
+        CategoriesService.removeCategory(categoryId)
+            .then(function (data) {
+                if (data.success) loadList();
+            });
     }
 
     init_();

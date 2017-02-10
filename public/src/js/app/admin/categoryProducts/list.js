@@ -14,16 +14,18 @@ NShop.controller('AdminCategoryProductsList', function ($scope, $stateParams, Ca
     }
 
     function loadList() {
-        CategoryProductsService.getCategoryProducts(categoryId).then(function (data) {
-            $scope.categoryName = data.name;
-            $scope.products = data.products;
-        });
+        CategoryProductsService.getCategoryProducts(categoryId)
+            .then(function (data) {
+                $scope.categoryName = data.name;
+                $scope.products = data.products;
+            });
     }
 
     function removeProduct(productId) {
-        CategoryProductsService.removeCategoryProduct(categoryId, productId).then(function (data) {
-            if (data.ok) loadList();
-        });
+        CategoryProductsService.removeCategoryProduct(categoryId, productId)
+            .then(function (data) {
+                if (data.success) loadList();
+            });
     }
 
     init_();

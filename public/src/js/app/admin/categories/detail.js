@@ -26,25 +26,28 @@ NShop.controller('AdminCategoriesDetail', function ($scope, $stateParams, Catego
     }
 
     function getCategory(categoryId) {
-        CategoriesService.getCategory(categoryId).then(showCategory);
+        CategoriesService.getCategory(categoryId)
+            .then(showCategory);
     }
 
     function createCategory() {
-        CategoriesService.createCategory($scope.category).then(function (response) {
-            if (response._id) {
-                clearCategory();
-                $scope.$emit('AdminCategoriesList.load');
-            }
-        });
+        CategoriesService.createCategory($scope.category)
+            .then(function (response) {
+                if (response._id) {
+                    clearCategory();
+                    $scope.$emit('AdminCategoriesList.load');
+                }
+            });
     }
 
     function updateCategory() {
-        CategoriesService.updateCategory($scope.category).then(function (response) {
-            if (response._id) {
-                showCategory(response);
-                $scope.$emit('AdminCategoriesList.load');
-            }
-        });
+        CategoriesService.updateCategory($scope.category)
+            .then(function (response) {
+                if (response._id) {
+                    showCategory(response);
+                    $scope.$emit('AdminCategoriesList.load');
+                }
+            });
     }
 
     function clearCategory() {

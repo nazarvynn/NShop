@@ -21,16 +21,18 @@ NShop.controller('AdminProductsList', function ($scope, $stateParams, ProductsSe
     }
 
     function loadList() {
-        ProductsService.getProducts().then(function (data) {
-            $scope.products = data;
-            $scope.$broadcast('AdminProductsList.loaded');
-        });
+        ProductsService.getProducts()
+            .then(function (data) {
+                $scope.products = data;
+                $scope.$broadcast('AdminProductsList.loaded');
+            });
     }
 
     function removeProduct(product) {
-        CategoryProductsService.removeCategoryProduct(product.categoryId, product.data._id).then(function (data) {
-            if (data.ok) loadList();
-        });
+        CategoryProductsService.removeCategoryProduct(product.categoryId, product.data._id)
+            .then(function (data) {
+                if (data.success) loadList();
+            });
     }
 
     init_();

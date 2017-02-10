@@ -2,6 +2,9 @@ var _ = require('underscore');
 
 module.exports = function (app, Category) {
 
+    var ERROR_400 = 'Bed request';
+    var ERROR_404 = 'ID not found or invalid';
+
     var URL = {
         categories: '/api/categories',
         category: '/api/categories/:id'
@@ -11,15 +14,14 @@ module.exports = function (app, Category) {
     app.get(URL.categories, function (request, response) {
         Category.find(function (error, categories) {
             if (error) {
-                response.status(500);
-                response.send(error);
+                sendError_500(response, error);
+            } else {
+                var result = _.map(categories, function (category) {
+                    return _.omit(category.toObject(), ['__v', 'products']);
+                });
+                response.status(200);
+                response.json(result);
             }
-
-            var result = _.map(categories, function (category) {
-                return _.omit(category.toObject(), ['__v', 'products']);
-            });
-            response.status(200);
-            response.json(result);
         });
     });
 
@@ -33,8 +35,7 @@ module.exports = function (app, Category) {
         var body = request.body;
 
         if (_.isEmpty(body)) {
-            response.status(204);
-            response.send({ error: 'No Content' });
+            sendError_400(response);
         } else {
             var category = { name: body.name };
             Category.create(category, send(201, response));
@@ -46,8 +47,7 @@ module.exports = function (app, Category) {
         var body = request.body;
 
         if (_.isEmpty(body)) {
-            response.status(204);
-            response.send({ error: 'No Content' });
+            sendError_400(response);
         } else {
             var category = { name: body.name };
             Category.findOneAndUpdate({ _id: request.params.id }, category, { new: true }, send(200, response));
@@ -56,7 +56,14 @@ module.exports = function (app, Category) {
 
 
     app.delete(URL.category, function (request, response) {
-        Category.remove({ _id : request.params.id }, send(200, response));
+        Category.remove({ _id : request.params.id }, function(error, category) {
+            if (error) {
+                sendError_500(response, error);
+            } else {
+                response.status(200);
+                response.json({ success: true });
+            }
+        });
     });
 
 
@@ -65,18 +72,25 @@ module.exports = function (app, Category) {
             var _statusCode = statusCode || 200;
 
             if (error) {
-                response.status(500);
-                response.send(error);
-            }
-
-            if (!category) {
+                sendError_500(response, error);
+            } else if (!category) {
                 response.status(404);
-                response.send({ error: 'ID not found or invalid' });
+                response.send({ error: ERROR_404 });
+            } else {
+                var result = _.omit(category.toObject(), ['__v', 'products']);
+                response.status(_statusCode);
+                response.json(result);
             }
-
-            var result = _.omit(category.toObject(), ['__v', 'products']);
-            response.status(_statusCode);
-            response.json(result);
         }
+    }
+
+    function sendError_400(response) {
+        response.status(400);
+        response.send({ error: ERROR_400 });
+    }
+
+    function sendError_500(response, error) {
+        response.status(500);
+        response.send(error);
     }
 };

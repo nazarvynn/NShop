@@ -3,8 +3,7 @@ NShop.controller('AdminCategoryProductsDetail', function ($scope, $stateParams, 
     var emptyProduct = {
         name: '',
         price: '',
-        description: '',
-        ing: ''
+        description: ''
     };
     var categoryId = $stateParams.categoryId;
     var productId = $stateParams.productId;
@@ -30,25 +29,32 @@ NShop.controller('AdminCategoryProductsDetail', function ($scope, $stateParams, 
     }
 
     function getCategoryProduct() {
-        CategoryProductsService.getCategoryProduct(categoryId, productId).then(showCategoryProduct);
+        CategoryProductsService.getCategoryProduct(categoryId, productId)
+            .then(showCategoryProduct);
     }
 
     function createCategoryProduct() {
-        CategoryProductsService.createCategoryProduct(categoryId, $scope.product).then(function (response) {
-            if (response._id) {
-                clearCategoryProduct();
-                $scope.$emit('AdminCategoryProductsList.load');
-            }
-        });
+        CategoryProductsService.createCategoryProduct(categoryId, $scope.product)
+            .then(function (response) {
+                if (response._id) {
+                    clearCategoryProduct();
+                    $scope.$emit('AdminCategoryProductsList.load');
+                }
+            });
     }
 
     function updateCategoryProduct() {
-        CategoryProductsService.updateCategoryProduct(categoryId, $scope.product).then(function (response) {
-            if (response._id) {
-                showCategoryProduct(response);
-                $scope.$emit('AdminCategoryProductsList.load');
-            }
-        });
+        CategoryProductsService.updateCategoryProduct(categoryId, $scope.product, isEntireUpdate())
+            .then(function (response) {
+                if (response._id) {
+                    showCategoryProduct(response);
+                    $scope.$emit('AdminCategoryProductsList.load');
+                }
+            });
+    }
+
+    function isEntireUpdate() {
+        return ObjUtils.isEqualObjects(originalData, $scope.product, ['_id']);
     }
 
     function clearCategoryProduct() {

@@ -20,9 +20,10 @@ NShop.factory('CategoryProductsService', function ($http) {
         return request('post', url, product);
     };
 
-    service.updateCategoryProduct = function (categoryId, product) {
+    service.updateCategoryProduct = function (categoryId, product, isEntireUpdate) {
+        var method = isEntireUpdate ? 'put' : 'patch';
         var url = URL.categoryProduct.format({ categoryId: categoryId, productId: product._id });
-        return request('put', url, product);
+        return request(method, url, product);
     };
 
     service.removeCategoryProduct = function (categoryId, productId) {

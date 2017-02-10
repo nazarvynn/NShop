@@ -3,6 +3,9 @@ var _ = require('underscore');
 
 module.exports = function (app, Category, Product) {
 
+    var ERROR_400 = 'Bed request';
+    var ERROR_404 = 'ID not found or invalid';
+
     var URL = {
         categoryProducts: '/api/categories/:categoryId/products',
         categoryProduct: '/api/categories/:categoryId/products/:productId'
@@ -11,8 +14,12 @@ module.exports = function (app, Category, Product) {
     //Routes
     app.get(URL.categoryProducts, function (request, response) {
         Category.findById(request.params.categoryId, function (error, category) {
-            sendError(response, error);
-            response.json(category);
+            if (error) {
+                sendError_500(response, error);
+            } else {
+                response.status(200);
+                response.json(category);
+            }
         });
     });
 
@@ -20,64 +27,145 @@ module.exports = function (app, Category, Product) {
     app.get(URL.categoryProduct, function (request, response) {
         var productId = request.params.productId;
         Category.findById(request.params.categoryId, function (error, category) {
-            sendError(response, error);
-            response.json(category.products.id(productId));
+            if (error) {
+                sendError_500(response, error);
+            } else if (!category) {
+                sendError_404(response);
+            } else {
+                response.status(200);
+                response.json(category.products.id(productId));
+            }
         });
     });
 
 
     app.post(URL.categoryProducts, function (request, response) {
-        var newProduct = Product(request.body);
+        var body = request.body;
+        if (_.isEmpty(body)) {
+            sendError_400(response);
+        } else {
+            var newProduct = Product(body);
 
-        Category.findById(request.params.categoryId, function (error, category) {
-            sendError(response, error);
-
-            category.products.push(newProduct);
-            category.save(function (error, category) {
-                if (error) response.send(error);
-                response.json(category);
+            Category.findById(request.params.categoryId, function (error, category) {
+                if (error) {
+                    sendError_500(response, error);
+                } else if (!category) {
+                    sendError_404(response);
+                } else {
+                    category.products.push(newProduct);
+                    category.save(function (error, category) {
+                        if (error) {
+                            sendError_500(response, error);
+                        } else {
+                            response.status(201);
+                            response.json(category);
+                        }
+                    });
+                }
             });
-        });
+        }
     });
 
 
     app.put(URL.categoryProduct, function (request, response) {
-        var newProduct = Product(request.body);
-        var productId = request.params.productId;
+        var body = request.body;
+        if (_.isEmpty(body)) {
+            sendError_400(response);
+        } else {
+            var newProduct = Product(body);
+            var productId = request.params.productId;
 
-        Category.findById(request.params.categoryId, function (error, category) {
-            sendError(response, error);
+            Category.findById(request.params.categoryId, function (error, category) {
+                if (error) {
+                    sendError_500(response, error);
+                } else if (!category) {
+                    sendError_404(response);
+                } else {
+                    var product = category.products.id(productId);
+                    _.each(newProduct.toObject(), function (value, key) {
+                        if ('_id' !== key) product[key] = value;
+                    });
 
-            var product = category.products.id(productId);
-            _.each(newProduct.toObject(), function (value, key) {
-                if ('_id' !== key) product[key] = value;
+                    category.save(function (error, category) {
+                        if (error) {
+                            sendError_500(response, error);
+                        } else {
+                            response.status(200);
+                            response.json(category.products.id(productId));
+                        }
+                    });
+                }
             });
-
-            category.save(function (error, category) {
-                if (error) response.send(error);
-                response.json(category.products.id(productId));
-            });
-        });
+        }
     });
 
-    //TODO: Implement "PATCH"
+
+    app.patch(URL.categoryProduct, function (request, response) {
+        var body = request.body;
+        if (_.isEmpty(body)) {
+            sendError_400(response);
+        } else {
+            var newProduct = Product(body);
+            var productId = request.params.productId;
+
+            Category.findById(request.params.categoryId, function (error, category) {
+                if (error) {
+                    sendError_500(response, error);
+                } else if (!category) {
+                    sendError_404(response);
+                } else {
+                    var product = category.products.id(productId);
+                    _.each(newProduct.toObject(), function (value, key) {
+                        if ('_id' !== key) product[key] = value;
+                    });
+
+                    category.save(function (error, category) {
+                        if (error) {
+                            sendError_500(response, error);
+                        } else {
+                            response.status(200);
+                            response.json(category.products.id(productId));
+                        }
+                    });
+                }
+            });
+        }
+    });
 
 
     app.delete(URL.categoryProduct, function (request, response) {
         var productId = request.params.productId;
 
         Category.findById(request.params.categoryId, function (error, category) {
-            sendError(response, error);
-
-            category.products.id(request.params.productId).remove();
-            category.save(function (error, category) {
-                if (error) response.send(error);
-                response.json({ ok: 1 });
-            });
+            if (error) {
+                sendError_500(response, error);
+            } else if (!category) {
+                sendError_404(response);
+            } else {
+                category.products.id(request.params.productId).remove();
+                category.save(function (error, category) {
+                    if (error) {
+                        sendError_500(response, error);
+                    } else {
+                        response.status(200);
+                        response.json({ success: true });
+                    }
+                });
+            }
         });
     });
 
-    function sendError(response, error) {
+    function sendError_400(response) {
+        response.status(204);
+        response.send({ error: ERROR_400 });
+    }
+
+    function sendError_404(response) {
+        response.status(404);
+        response.send({ error: ERROR_404 });
+    }
+
+    function sendError_500(response, error) {
         response.status(500);
         response.send(error);
     }
